@@ -1,23 +1,9 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import Input from "../../../shared/Input/UI/Input";
-import { RegisterOptions } from "react-hook-form";
+import { IRangeInputComponentProps } from "../model/IRangeInputComponents";
+import cl from "./RangeInput.module.scss";
 
-interface RangeInputComponentProps {
-  min: number;
-  max: number;
-  value: number;
-  step: number;
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  typeRange: string;
-  type: string;
-  header: string;
-  category: "priceProperty" | "initialFee" | "term" | "monthlyPayment";
-  register: (name: string, rules?: RegisterOptions) => void;
-  errors: any;
-  children: React.ReactNode;
-}
-
-const RangeInput: React.FC<RangeInputComponentProps> = ({
+const RangeInput: React.FC<IRangeInputComponentProps> = ({
   type,
   typeRange,
   min,
@@ -29,10 +15,14 @@ const RangeInput: React.FC<RangeInputComponentProps> = ({
   category,
   register,
   errors,
+  priceProperty,
+  term,
+  percent,
+
   children,
 }) => {
   return (
-    <div>
+    <div className={cl.RangeInputWrapper}>
       <p>{header}</p>
       <Input
         type={type}
@@ -41,6 +31,9 @@ const RangeInput: React.FC<RangeInputComponentProps> = ({
         category={category}
         register={register}
         errors={errors}
+        priceProperty={priceProperty}
+        term={term}
+        percent={percent}
       />
 
       <input

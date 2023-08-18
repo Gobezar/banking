@@ -1,0 +1,28 @@
+$blue-color: rgb(3, 155, 229);
+$light_blue-color: rgb(138, 198, 228);
+$gray-color: #383735;
+$light_gray-color: #817d75;
+$ultra_light_gray-color: #dfdede;
+
+* {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(244, 245, 248);
+}
+
+p {
+  font-size: 18px;
+}
+
+h1 {
+  font-size: 46px;
+}
+
+h3 {
+  font-size: 22px;
+}

@@ -9,7 +9,11 @@ const initialState: IMOrtgage = {
   propertyType: "",
   hasOwnProperty: "",
   term: 15,
-  monthlyPayment: 2654,
+  percent: 7.3,
+  monthlyPayment: 0,
+  overPayment: 0,
+  totalPayment: 0,
+  loanAmount: 0,
 };
 
 const mortgageSlice = createSlice({
@@ -37,31 +41,34 @@ const mortgageSlice = createSlice({
     setTerm(state, action) {
       state.term = action.payload;
     },
+    setPercent(state, action) {
+      state.percent = action.payload;
+    },
     setMonthlyPayment(state, action) {
       state.monthlyPayment = action.payload;
     },
-  },
-  //   extraReducers: {
-  //     [fetchNewsList.pending.type]: (state) => {
-  //       state.isLoading = true
-  //       state.error = false
-  //     },
+    CalculatePayment(state) {
+      const loanAmount = state.priceProperty - state.initialFee;
+      const monthlyInterestRate = state.percent / 100 / 12;
+      const numberOfPayments = state.term * 12;
 
-  //     [fetchNewsList.fulfilled.type]: (state, action) => {
-  //       state.isLoading = false
-  //       if (action.payload.type === 'currentPage') {
-  //         state.news.push(...action.payload.results)
-  //       } else if (action.payload.type === 'filters') {
-  //         state.news = action.payload.results
-  //       }
-  //       state.error = false
-  //     },
-  //     [fetchNewsList.rejected.type]: (state) => {
-  //       state.isLoading = false
-  //       state.news = []
-  //       state.error = true
-  //     },
-  //   },
+      // Расчет ежемесячного платежа
+      const monthlyPayment =
+        (loanAmount * monthlyInterestRate) /
+        (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+
+      // Расчет переплаты
+      const overpayment = monthlyPayment * numberOfPayments - loanAmount;
+
+      // Расчет общей выплаты
+      const totalPayment = loanAmount + overpayment;
+
+      state.monthlyPayment = parseFloat(monthlyPayment.toFixed(3));
+      state.loanAmount = parseFloat(loanAmount.toFixed(3));
+      state.overPayment = parseFloat(overpayment.toFixed(3));
+      state.totalPayment = parseFloat(totalPayment.toFixed(3));
+    },
+  },
 });
 
 export const {
@@ -73,5 +80,7 @@ export const {
   setHasOwnProperty,
   setTerm,
   setMonthlyPayment,
+  CalculatePayment,
+  setPercent,
 } = mortgageSlice.actions;
 export default mortgageSlice.reducer;

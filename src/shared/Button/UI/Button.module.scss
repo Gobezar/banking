@@ -1,0 +1,15 @@
+@import "../../../styles/global.scss";
+
+.Button {
+  background-color: $blue-color;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: #fff;
+  border-radius: 7px;
+  border: none;
+  &:hover {
+    cursor: pointer;
+    background-color: $light_blue-color;
+  }
+}

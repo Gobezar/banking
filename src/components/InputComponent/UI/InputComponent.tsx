@@ -1,21 +1,16 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../../store/reduxHooks";
 import {
   setInitialFeeValue,
   setPricePropertyValue,
   setTerm,
-  setMonthlyPayment,
+  CalculatePayment,
+  setPercent,
 } from "../../../store/slices/mortgageSlice";
 import Input from "../../../shared/Input/UI/Input";
 import RangeInput from "../../../shared/RangeInput/UI/RangeInput";
-import { RegisterOptions } from "react-hook-form";
-
-interface InputComponentProps {
-  range: boolean;
-  type: "priceProperty" | "initialFee" | "term" | "monthlyPayment";
-  register: any;
-  errors: any;
-}
+import { InputComponentProps } from "../model/InputComponentProps";
+import cl from "./InputComponent.module.scss";
 
 const InputComponent: React.FC<InputComponentProps> = ({
   range,
@@ -24,13 +19,16 @@ const InputComponent: React.FC<InputComponentProps> = ({
   errors,
 }) => {
   const dispatch = useAppDispatch();
-  const { initialFee, priceProperty, term, monthlyPayment } = useAppSelector(
+  const { initialFee, priceProperty, term, percent } = useAppSelector(
     (state) => state.mortgageSlice
   );
-  console.log(errors);
+
+  useEffect(() => {
+    dispatch(CalculatePayment());
+  }, [priceProperty, term, initialFee, percent]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
+    const newValue = Number(event.target.value);
 
     switch (type) {
       case "priceProperty":
@@ -42,8 +40,8 @@ const InputComponent: React.FC<InputComponentProps> = ({
       case "term":
         dispatch(setTerm(newValue));
         break;
-      case "monthlyPayment":
-        dispatch(setMonthlyPayment(newValue));
+      case "percent":
+        dispatch(setPercent(newValue));
         break;
       default:
         break;
@@ -53,7 +51,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
   return (
     <div>
       {range === false && type === "priceProperty" && (
-        <div>
+        <div className={cl.InputComponent}>
           <p>Стоимость недвижимости</p>
           <Input
             type="text"
@@ -62,13 +60,16 @@ const InputComponent: React.FC<InputComponentProps> = ({
             category={type}
             register={register}
             errors={errors}
+            priceProperty={priceProperty}
+            term={term}
+            percent={percent}
           />
           {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
         </div>
       )}
 
       {range && type === "initialFee" && (
-        <div>
+        <div className={cl.InputComponent}>
           <RangeInput
             header="Первоначальный взнос"
             type="text"
@@ -81,13 +82,16 @@ const InputComponent: React.FC<InputComponentProps> = ({
             category={type}
             register={register}
             errors={errors}
+            priceProperty={priceProperty}
+            term={term}
+            percent={percent}
           >
             {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
           </RangeInput>
         </div>
       )}
       {range && type === "term" && (
-        <div>
+        <div className={cl.InputComponent}>
           <RangeInput
             header="Срок"
             type="text"
@@ -100,25 +104,31 @@ const InputComponent: React.FC<InputComponentProps> = ({
             category={type}
             register={register}
             errors={errors}
+            priceProperty={priceProperty}
+            term={term}
+            percent={percent}
           >
             {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
           </RangeInput>
         </div>
       )}
-      {range && type === "monthlyPayment" && (
-        <div>
+      {range && type === "percent" && (
+        <div className={cl.InputComponent}>
           <RangeInput
-            header="Ежемесячный платёж"
+            header="Процентрая ставка"
             type="text"
             typeRange="range"
-            min={2654}
-            max={21130}
-            value={monthlyPayment}
-            step={1}
+            min={0.1}
+            max={30}
+            value={percent}
+            step={0.1}
             onChange={handleInputChange}
             category={type}
             register={register}
             errors={errors}
+            priceProperty={priceProperty}
+            term={term}
+            percent={percent}
           >
             {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
           </RangeInput>
