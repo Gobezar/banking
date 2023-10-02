@@ -3,4 +3,5 @@ export interface InputComponentProps {
   type: "priceProperty" | "initialFee" | "term" | "monthlyPayment" | "percent";
   register: any;
   errors: any;
+  triggerChange: () => void;
 }

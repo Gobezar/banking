@@ -2,9 +2,10 @@
 
 .inputWrapper input {
   padding: 10px 30px;
-  margin: 10px 0 10px 0;
+  margin: 10px 0px;
   font-size: 18px;
-  width: 230px;
+  // width: 230px;
+  width: 100%;
   border-radius: 7px;
   border: 1px solid $ultra_light_gray-color;
 
@@ -16,5 +17,7 @@
 
 .inputWrapper input[category="priceProperty"],
 .inputWrapper input[category="initialFee"] {
-  width: 500px;
+  // width: 500px;
+  margin: 10px 0px;
+  width: 100%;
 }

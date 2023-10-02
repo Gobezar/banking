@@ -13,3 +13,12 @@
     background-color: $light_blue-color;
   }
 }
+.disabled {
+  opacity: 0.5;
+  background-color: $blue-color;
+
+  &:hover {
+    cursor: default;
+    background-color: $blue-color;
+  }
+}

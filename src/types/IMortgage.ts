@@ -11,4 +11,5 @@ export interface IMOrtgage {
   overPayment: number;
   totalPayment: number;
   loanAmount: number;
+  correctValidation: boolean;
 }

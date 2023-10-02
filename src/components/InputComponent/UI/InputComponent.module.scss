@@ -1,3 +1,8 @@
 .InputComponent {
-  margin-bottom: 20px;
+  .spanTitle {
+    font-weight: 700;
+  }
+  .spanError {
+    color: red;
+  }
 }

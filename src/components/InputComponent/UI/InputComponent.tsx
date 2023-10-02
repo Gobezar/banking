@@ -6,6 +6,7 @@ import {
   setTerm,
   CalculatePayment,
   setPercent,
+  setCorrectValidation,
 } from "../../../store/slices/mortgageSlice";
 import Input from "../../../shared/Input/UI/Input";
 import RangeInput from "../../../shared/RangeInput/UI/RangeInput";
@@ -17,6 +18,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
   type,
   register,
   errors,
+  triggerChange,
 }) => {
   const dispatch = useAppDispatch();
   const { initialFee, priceProperty, term, percent } = useAppSelector(
@@ -27,9 +29,18 @@ const InputComponent: React.FC<InputComponentProps> = ({
     dispatch(CalculatePayment());
   }, [priceProperty, term, initialFee, percent]);
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newValue = Number(event.target.value);
+  useEffect(() => {
+    const hasErrors = Object.values(errors).some((error) => !!error);
+    if (hasErrors) {
+      dispatch(setCorrectValidation(false));
+    } else {
+      dispatch(setCorrectValidation(true));
+    }
+  }, [priceProperty, term, initialFee, percent, Object.values(errors)]);
 
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    triggerChange();
+    const newValue = Number(event.target.value);
     switch (type) {
       case "priceProperty":
         dispatch(setPricePropertyValue(newValue));
@@ -52,9 +63,9 @@ const InputComponent: React.FC<InputComponentProps> = ({
     <div>
       {range === false && type === "priceProperty" && (
         <div className={cl.InputComponent}>
-          <p>Стоимость недвижимости</p>
+          <span className={cl.spanTitle}>Стоимость недвижимости</span>
           <Input
-            type="text"
+            type="number"
             value={priceProperty}
             onChange={handleInputChange}
             category={type}
@@ -64,7 +75,11 @@ const InputComponent: React.FC<InputComponentProps> = ({
             term={term}
             percent={percent}
           />
-          {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
+          {errors?.[type] && (
+            <span className={cl.spanError}>
+              {errors?.[type]?.message || "Error"}
+            </span>
+          )}
         </div>
       )}
 
@@ -72,7 +87,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
         <div className={cl.InputComponent}>
           <RangeInput
             header="Первоначальный взнос"
-            type="text"
+            type="number"
             typeRange="range"
             min={100000}
             max={1000000}
@@ -86,7 +101,11 @@ const InputComponent: React.FC<InputComponentProps> = ({
             term={term}
             percent={percent}
           >
-            {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
+            {errors?.[type] && (
+              <span className={cl.spanError}>
+                {errors?.[type]?.message || "Error"}
+              </span>
+            )}
           </RangeInput>
         </div>
       )}
@@ -94,7 +113,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
         <div className={cl.InputComponent}>
           <RangeInput
             header="Срок"
-            type="text"
+            type="number"
             typeRange="range"
             min={4}
             max={30}
@@ -108,7 +127,11 @@ const InputComponent: React.FC<InputComponentProps> = ({
             term={term}
             percent={percent}
           >
-            {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
+            {errors?.[type] && (
+              <span className={cl.spanError}>
+                {errors?.[type]?.message || "Error"}
+              </span>
+            )}
           </RangeInput>
         </div>
       )}
@@ -116,7 +139,7 @@ const InputComponent: React.FC<InputComponentProps> = ({
         <div className={cl.InputComponent}>
           <RangeInput
             header="Процентрая ставка"
-            type="text"
+            type="number"
             typeRange="range"
             min={0.1}
             max={30}
@@ -130,7 +153,11 @@ const InputComponent: React.FC<InputComponentProps> = ({
             term={term}
             percent={percent}
           >
-            {errors?.[type] && <p>{errors?.[type]?.message || "Error"}</p>}
+            {errors?.[type] && (
+              <span className={cl.spanError}>
+                {errors?.[type]?.message || "Error"}
+              </span>
+            )}
           </RangeInput>
         </div>
       )}

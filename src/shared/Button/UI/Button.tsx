@@ -1,5 +1,6 @@
 import React from "react";
 import cl from "./Button.module.scss";
+import cn from "classnames";
 
 type ButtonProps = {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -15,7 +16,7 @@ function Button({ onClick, children, disabled, type }: ButtonProps) {
         onClick={onClick}
         type={type}
         disabled={disabled}
-        className={cl.Button}
+        className={cn(cl.Button, disabled && cl.disabled)}
       >
         {children}
       </button>

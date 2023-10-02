@@ -14,6 +14,7 @@ const initialState: IMOrtgage = {
   overPayment: 0,
   totalPayment: 0,
   loanAmount: 0,
+  correctValidation: true,
 };
 
 const mortgageSlice = createSlice({
@@ -68,6 +69,9 @@ const mortgageSlice = createSlice({
       state.overPayment = parseFloat(overpayment.toFixed(3));
       state.totalPayment = parseFloat(totalPayment.toFixed(3));
     },
+    setCorrectValidation(state, action) {
+      state.correctValidation = action.payload;
+    },
   },
 });
 
@@ -82,5 +86,6 @@ export const {
   setMonthlyPayment,
   CalculatePayment,
   setPercent,
+  setCorrectValidation,
 } = mortgageSlice.actions;
 export default mortgageSlice.reducer;

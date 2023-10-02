@@ -23,7 +23,7 @@ const RangeInput: React.FC<IRangeInputComponentProps> = ({
 }) => {
   return (
     <div className={cl.RangeInputWrapper}>
-      <p>{header}</p>
+      <span className={cl.spanTitle}>{header}</span>
       <Input
         type={type}
         value={value}

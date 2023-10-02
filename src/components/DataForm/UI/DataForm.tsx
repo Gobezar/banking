@@ -13,14 +13,22 @@ const DataForm = () => {
     register,
     formState: { errors },
     handleSubmit,
+    trigger,
   } = useForm<IMyForm>({ defaultValues: {} });
 
-  const { monthlyPayment, loanAmount, overPayment, totalPayment } =
-    useAppSelector((state) => state.mortgageSlice);
+  const {
+    monthlyPayment,
+    loanAmount,
+    overPayment,
+    totalPayment,
+    correctValidation,
+  } = useAppSelector((state) => state.mortgageSlice);
 
   const submit: SubmitHandler<IMyForm> = (data: any) => console.log(data);
   const error: SubmitErrorHandler<IMyForm> = (data: any) => console.log(data);
+  const hasErrors = Object.values(errors).some((error) => !!error);
 
+  console.log(errors);
   return (
     <div className={cl.dataFormWrapper}>
       <h1>Ипотечный калькулятор</h1>
@@ -30,20 +38,26 @@ const DataForm = () => {
       </h3>
       <div className={cl.dataFormBlock}>
         <div className={cl.dataFormLeftBlock}>
-          <form onSubmit={handleSubmit(submit, error)}>
+          <form>
             <div className={cl.formFirstBlock}>
-              <InputComponent
-                range={false}
-                type="priceProperty"
-                register={register}
-                errors={errors}
-              />
-              <InputComponent
-                range={true}
-                type="initialFee"
-                register={register}
-                errors={errors}
-              />
+              <div className={cl.firstBlockLeft}>
+                <InputComponent
+                  range={false}
+                  type="priceProperty"
+                  register={register}
+                  errors={errors}
+                  triggerChange={() => trigger()}
+                />
+              </div>
+              <div className={cl.firstBlockRight}>
+                <InputComponent
+                  range={true}
+                  type="initialFee"
+                  register={register}
+                  errors={errors}
+                  triggerChange={() => trigger()}
+                />
+              </div>
             </div>
             {/* <SelectComponent type="city" header="Город покупки недвижимости" />
         <SelectComponent
@@ -56,29 +70,77 @@ const DataForm = () => {
           header="Вы уже владеете недвижимостью?"
         /> */}
             <div className={cl.formSecondBlock}>
-              <InputComponent
-                range={true}
-                type="term"
-                register={register}
-                errors={errors}
-              />
-              <InputComponent
-                range={true}
-                type="percent"
-                register={register}
-                errors={errors}
-              />
+              <div className={cl.secondBlockLeft}>
+                <InputComponent
+                  range={true}
+                  type="term"
+                  register={register}
+                  errors={errors}
+                  triggerChange={() => trigger()}
+                />
+              </div>
+              <div className={cl.secondBlockRight}>
+                <InputComponent
+                  range={true}
+                  type="percent"
+                  register={register}
+                  errors={errors}
+                  triggerChange={() => trigger()}
+                />
+              </div>
             </div>
           </form>
         </div>
         <div className={cl.dataFormRightBlock}>
           <h3>Результаты расчёта:</h3>
-          <p>Сумма кредита: {loanAmount} рублей</p>
-          <p>Ежемесячный платёж: {monthlyPayment} рублей</p>
-          <p>Переплата по кредиту: {overPayment} рублей</p>
-          <p>Общая выплата: {totalPayment} рублей</p>
+          <span>
+            Сумма кредита:
+            {correctValidation ? (
+              <>
+                {""} {loanAmount} рублей
+              </>
+            ) : (
+              <>{""} —</>
+            )}
+          </span>
+          <span>
+            Ежемесячный платёж:
+            {correctValidation ? (
+              <>
+                {""} {monthlyPayment} рублей
+              </>
+            ) : (
+              <>{""} —</>
+            )}
+          </span>
+          <span>
+            Переплата по кредиту:
+            {correctValidation ? (
+              <>
+                {""} {overPayment} рублей
+              </>
+            ) : (
+              <>{""} —</>
+            )}
+          </span>
+          <span>
+            Общая выплата:
+            {correctValidation ? (
+              <>
+                {""} {totalPayment} рублей
+              </>
+            ) : (
+              <>{""} —</>
+            )}
+          </span>
 
-          <Button type="submit">Подать заявку онлайн &gt;</Button>
+          <Button
+            onClick={handleSubmit(submit, error)}
+            disabled={hasErrors && true}
+            type="submit"
+          >
+            Подать заявку онлайн &gt;
+          </Button>
         </div>
       </div>
     </div>
